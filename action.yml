@@ -1,0 +1,13 @@
+name: 'YC-Token token generator'
+description: 'Action for working with YC component and getting IAM token'
+author: 'Alexander <BigTows> Chapchuk'
+inputs:
+  service-account-token:
+    required: true
+    description: 'Token for authorization into Yandex.Cloud'
+  type-token:
+    required: false
+    description: 'Value of type token for creation'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
