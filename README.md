@@ -8,7 +8,7 @@ Current supported token's:
 ```yaml
     - name: Create IAM token
       id: generation-iam-token
-      uses: ./
+      uses: bigtows/yc-token@latest
       with:
         service-account-token: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
         type-token: iam
@@ -25,7 +25,7 @@ generate-token:
     - uses: actions/checkout@v2
     - name: Create IAM token
       id: generation-iam-token
-      uses: ./
+      uses: bigtows/yc-token@latest
       with:
         service-account-token: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
         type-token: iam

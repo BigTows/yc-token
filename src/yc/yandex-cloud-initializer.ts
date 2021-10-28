@@ -47,7 +47,7 @@ export default class YandexCloudInitializer {
    */
   createIamToken(): void {
     core.debug('Start creating an iam token')
-    const iamToken: string = execSync(`yc iam create-token`).toString()
+    const iamToken: string = execSync(`yc iam create-token`).toString().trim()
     core.setSecret(iamToken)
     core.setOutput('iam-token', iamToken)
   }
