@@ -1,5 +1,5 @@
 # Yandex.Cloud token generator
-Action for GitHub, which helps generate token's of yandex cloud.
+Action for GitHub, which helps generate tokens of yandex cloud.
 Current supported token's:
  - [IAM](https://cloud.yandex.ru/docs/iam/concepts/authorization/iam-token)
 
