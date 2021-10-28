@@ -1,4 +1,4 @@
-name: 'YC-Token token generator'
+name: 'Yandex Cloud (yc) - Token generator'
 description: 'Action for working with YC component and getting IAM token'
 author: 'Alexander <BigTows> Chapchuk'
 inputs:
