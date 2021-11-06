@@ -30,6 +30,6 @@ jobs:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "dev-${{ GITHUB_SHA }}"
+          automatic_release_tag: "dev-${{ github.sha }}"
           title: "${{ github.event.head_commit.message }}"
           prerelease: true
