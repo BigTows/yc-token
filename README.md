@@ -1,5 +1,5 @@
 # Yandex.Cloud token generator
-Action for GitHub, which helps generate token's of yandex cloud.
+Action for GitHub, which helps generate tokens of Yandex Cloud.
 Current supported token's:
  - [IAM](https://cloud.yandex.ru/docs/iam/concepts/authorization/iam-token)
  - k8s - This is  token for your [Managed Service for Kubernetes](https://cloud.yandex.ru/docs/managed-kubernetes/) config file. (aka [ExecCredential](https://kubernetes.io/docs/reference/config-api/client-authentication.v1beta1/)) 
@@ -15,7 +15,7 @@ Current supported token's:
 ```yaml
     - name: Create IAM token
       id: generation-iam-token
-      uses: ./
+      uses: bigtows/yc-token@latest
       with:
         service-account-token: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
         type-token: iam
@@ -32,7 +32,7 @@ generate-token:
     - uses: actions/checkout@v2
     - name: Create IAM token
       id: generation-iam-token
-      uses: ./
+      uses: bigtows/yc-token@latest
       with:
         service-account-token: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
         type-token: iam

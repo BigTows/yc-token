@@ -207,7 +207,7 @@ class YandexCloudInitializer {
      */
     createIamToken() {
         core.debug('Start creating an iam token');
-        const iamToken = (0, child_process_1.execSync)(`yc iam create-token`).toString();
+        const iamToken = (0, child_process_1.execSync)(`yc iam create-token`).toString().trim();
         core.setSecret(iamToken);
         core.setOutput('iam-token', iamToken);
     }
