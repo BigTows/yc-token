@@ -5,16 +5,23 @@ async function run(): Promise<void> {
   try {
     const secretToken: string = core.getInput('service-account-token')
     const yc = new YandexCloudInitializer('service-account-key', secretToken)
-    createTokenByType(yc, core.getInput('type-token'))
+    await createTokenByType(yc, core.getInput('type-token'))
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
 }
 
-function createTokenByType(yc: YandexCloudInitializer, typeToken: string) {
+async function createTokenByType(
+  yc: YandexCloudInitializer,
+  typeToken: string
+) {
   switch (typeToken.toLowerCase()) {
     case 'iam': {
       yc.createIamToken()
+      break
+    }
+    case 'k8s': {
+      await yc.createK8sToken(core.getInput('cluster-id'))
       break
     }
     default: {
