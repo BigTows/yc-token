@@ -225,9 +225,7 @@ class YandexCloudInitializer {
     createK8sToken(clusterId) {
         return __awaiter(this, void 0, void 0, function* () {
             core.debug('Start creating a k8s token');
-            yield exec.exec(`yc managed-kubernetes cluster get-credentials --id ${clusterId} --external`, [], {
-                failOnStdErr: true
-            });
+            yield exec.exec(`yc managed-kubernetes cluster get-credentials --id ${clusterId} --external`);
             const output = yield exec.getExecOutput('yc k8s create-token', [], {
                 silent: true,
                 failOnStdErr: true
