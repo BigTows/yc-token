@@ -1,0 +1,35 @@
+name: 'build-test'
+on: # rebuild any PRs and main branch changes
+  pull_request:
+  push:
+    branches:
+      - 'develop/*'
+jobs:
+  build: # make sure build/ci work properly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          npm install
+      - run: |
+          npm run all
+  test: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create IAM token
+        id: generation-iam-token
+        uses: ./
+        with:
+          service-account-token: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
+          type-token: iam
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "dev-${{ GITHUB_SHA }}"
+          title: "${{ github.event.head_commit.message }}"
+          prerelease: true
