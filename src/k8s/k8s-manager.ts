@@ -5,13 +5,15 @@ export default class K8sManager {
   basePath: string
 
   constructor(basePath: string) {
-    this.basePath = basePath
+    this.basePath = `${basePath}/config`
+
+    if (!fs.existsSync(this.basePath)) {
+      throw new Error(`Can't find k8s configuration file at ${this.basePath}`)
+    }
   }
 
   setToken(token: string): void {
-    const kubeConfig = YAML.parse(
-      fs.readFileSync(`${this.basePath}/config`, 'utf-8')
-    )
+    const kubeConfig = YAML.parse(fs.readFileSync(`${this.basePath}`, 'utf-8'))
 
     for (const user of kubeConfig.users) {
       if (user.user.exec === undefined) {
@@ -24,10 +26,10 @@ export default class K8sManager {
 
       execCredentials.args.push(token)
     }
-    fs.writeFileSync(`${this.basePath}/config`, YAML.stringify(kubeConfig))
+    fs.writeFileSync(`${this.basePath}`, YAML.stringify(kubeConfig))
   }
 
   getConfig(): string {
-    return fs.readFileSync(`${this.basePath}/config`, 'utf-8')
+    return fs.readFileSync(`${this.basePath}`, 'utf-8')
   }
 }

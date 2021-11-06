@@ -33,24 +33,27 @@ const fs = __importStar(__nccwpck_require__(747));
 const yaml_1 = __importDefault(__nccwpck_require__(552));
 class K8sManager {
     constructor(basePath) {
-        this.basePath = basePath;
+        this.basePath = `${basePath}/config`;
+        if (!fs.existsSync(this.basePath)) {
+            throw new Error(`Can't find k8s configuration file at ${this.basePath}`);
+        }
     }
     setToken(token) {
-        const kubeConfig = yaml_1.default.parse(fs.readFileSync(`${this.basePath}/config`, 'utf-8'));
+        const kubeConfig = yaml_1.default.parse(fs.readFileSync(`${this.basePath}`, "utf-8"));
         for (const user of kubeConfig.users) {
             if (user.user.exec === undefined) {
                 user.user.exec = {};
-                user.user.exec.apiVersion = 'client.authentication.k8s.io/v1beta1';
+                user.user.exec.apiVersion = "client.authentication.k8s.io/v1beta1";
             }
             const execCredentials = user.user.exec;
-            execCredentials.command = 'echo';
+            execCredentials.command = "echo";
             execCredentials.args = [];
             execCredentials.args.push(token);
         }
-        fs.writeFileSync('/Users/bigtows/.kube/d', yaml_1.default.stringify(kubeConfig));
+        fs.writeFileSync(`${this.basePath}`, yaml_1.default.stringify(kubeConfig));
     }
     getConfig() {
-        return fs.readFileSync(`${this.basePath}/config`, 'utf-8');
+        return fs.readFileSync(`${this.basePath}`, "utf-8");
     }
 }
 exports.default = K8sManager;
