@@ -59,7 +59,11 @@ export default class YandexCloudInitializer {
   async createK8sToken(clusterId: string): Promise<void> {
     core.debug('Start creating a k8s token')
     await exec.exec(
-      `yc managed-kubernetes cluster get-credentials --id ${clusterId} --external`
+      `yc managed-kubernetes cluster get-credentials --id ${clusterId} --external`,
+      [],
+      {
+        failOnStdErr: true
+      }
     )
     const output = await exec.getExecOutput('yc k8s create-token', [], {
       silent: true,
