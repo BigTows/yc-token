@@ -61,9 +61,10 @@ export default class YandexCloudInitializer {
     await exec.exec(
       `yc managed-kubernetes cluster get-credentials --id ${clusterId} --external`
     )
-    const output = await exec.getExecOutput('yc k8s create-token')
-
-    core.setSecret(output.stdout)
+    const output = await exec.getExecOutput('yc k8s create-token', [], {
+      silent: true,
+      failOnStdErr: true
+    })
 
     const k8sManager = new K8sManager(`${USER_HOME}/.kube/`)
 

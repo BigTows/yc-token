@@ -39,21 +39,21 @@ class K8sManager {
         }
     }
     setToken(token) {
-        const kubeConfig = yaml_1.default.parse(fs.readFileSync(`${this.basePath}`, "utf-8"));
+        const kubeConfig = yaml_1.default.parse(fs.readFileSync(`${this.basePath}`, 'utf-8'));
         for (const user of kubeConfig.users) {
             if (user.user.exec === undefined) {
                 user.user.exec = {};
-                user.user.exec.apiVersion = "client.authentication.k8s.io/v1beta1";
+                user.user.exec.apiVersion = 'client.authentication.k8s.io/v1beta1';
             }
             const execCredentials = user.user.exec;
-            execCredentials.command = "echo";
+            execCredentials.command = 'echo';
             execCredentials.args = [];
             execCredentials.args.push(token);
         }
         fs.writeFileSync(`${this.basePath}`, yaml_1.default.stringify(kubeConfig));
     }
     getConfig() {
-        return fs.readFileSync(`${this.basePath}`, "utf-8");
+        return fs.readFileSync(`${this.basePath}`, 'utf-8');
     }
 }
 exports.default = K8sManager;
@@ -226,8 +226,10 @@ class YandexCloudInitializer {
         return __awaiter(this, void 0, void 0, function* () {
             core.debug('Start creating a k8s token');
             yield exec.exec(`yc managed-kubernetes cluster get-credentials --id ${clusterId} --external`);
-            const output = yield exec.getExecOutput('yc k8s create-token');
-            core.setSecret(output.stdout);
+            const output = yield exec.getExecOutput('yc k8s create-token', [], {
+                silent: true,
+                failOnStdErr: true
+            });
             const k8sManager = new k8s_manager_1.default(`${USER_HOME}/.kube/`);
             k8sManager.setToken(output.stdout);
             const k8sConfig = k8sManager.getConfig();
