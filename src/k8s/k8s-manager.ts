@@ -24,7 +24,7 @@ export default class K8sManager {
 
       execCredentials.args.push(token)
     }
-    fs.writeFileSync('/Users/bigtows/.kube/d', YAML.stringify(kubeConfig))
+    fs.writeFileSync(`${this.basePath}/config`, YAML.stringify(kubeConfig))
   }
 
   getConfig(): string {
