@@ -4,7 +4,9 @@ import * as fs from 'fs'
 import K8sManager from '../k8s/k8s-manager'
 import {execSync} from 'child_process'
 
-const YC_BASE_PATH = '/home/runner/yandex-cloud'
+const USER_HOME = '/home/runner'
+
+const YC_BASE_PATH = `${USER_HOME}/yandex-cloud`
 const YC_INSTALLER = `curl -sS https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash`
 
 const ALLOWED_TYPE_AUTHORIZATION = new Map([
@@ -61,14 +63,14 @@ export default class YandexCloudInitializer {
     )
     const output = await exec.getExecOutput('yc k8s create-token')
 
-    K8sManager(output.stdout)
+    core.setSecret(output.stdout)
 
-    const k8sToken: string = execSync(
-      `yc managed-kubernetes cluster get-credentials --id ${clusterId} --external`
-    )
-      .toString()
-      .trim()
-    core.setSecret(k8sToken)
-    core.setOutput('k8s-token', k8sToken)
+    const k8sManager = new K8sManager(USER_HOME)
+
+    k8sManager.setToken(output.stdout)
+    const k8sConfig = k8sManager.getConfig()
+    core.setSecret(k8sConfig)
+
+    core.setOutput('k8s-config', k8sConfig)
   }
 }
