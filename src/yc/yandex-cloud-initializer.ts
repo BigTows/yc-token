@@ -65,7 +65,7 @@ export default class YandexCloudInitializer {
 
     core.setSecret(output.stdout)
 
-    const k8sManager = new K8sManager(USER_HOME)
+    const k8sManager = new K8sManager(`${USER_HOME}/.kube/`)
 
     k8sManager.setToken(output.stdout)
     const k8sConfig = k8sManager.getConfig()

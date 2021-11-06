@@ -36,21 +36,21 @@ class K8sManager {
         this.basePath = basePath;
     }
     setToken(token) {
-        const kubeConfig = yaml_1.default.parse(fs.readFileSync(`${this.basePath}/config`, "utf-8"));
+        const kubeConfig = yaml_1.default.parse(fs.readFileSync(`${this.basePath}/config`, 'utf-8'));
         for (const user of kubeConfig.users) {
             if (user.user.exec === undefined) {
                 user.user.exec = {};
-                user.user.exec.apiVersion = "client.authentication.k8s.io/v1beta1";
+                user.user.exec.apiVersion = 'client.authentication.k8s.io/v1beta1';
             }
             const execCredentials = user.user.exec;
-            execCredentials.command = "echo";
+            execCredentials.command = 'echo';
             execCredentials.args = [];
             execCredentials.args.push(token);
         }
-        fs.writeFileSync("/Users/bigtows/.kube/d", yaml_1.default.stringify(kubeConfig));
+        fs.writeFileSync('/Users/bigtows/.kube/d', yaml_1.default.stringify(kubeConfig));
     }
     getConfig() {
-        return fs.readFileSync(`${this.basePath}/config`, "utf-8");
+        return fs.readFileSync(`${this.basePath}/config`, 'utf-8');
     }
 }
 exports.default = K8sManager;
@@ -174,14 +174,14 @@ const exec = __importStar(__nccwpck_require__(514));
 const fs = __importStar(__nccwpck_require__(747));
 const k8s_manager_1 = __importDefault(__nccwpck_require__(785));
 const child_process_1 = __nccwpck_require__(129);
-const USER_HOME = "/home/runner";
+const USER_HOME = '/home/runner';
 const YC_BASE_PATH = `${USER_HOME}/yandex-cloud`;
 const YC_INSTALLER = `curl -sS https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash`;
 const ALLOWED_TYPE_AUTHORIZATION = new Map([
     [
-        "service-account-key",
+        'service-account-key',
         (secretToken) => {
-            core.debug("Add service-account-key");
+            core.debug('Add service-account-key');
             fs.appendFileSync(`${YC_BASE_PATH}/secret.json`, secretToken);
             (0, child_process_1.execSync)(`yc config set service-account-key ${YC_BASE_PATH}/secret.json`);
             fs.unlinkSync(`${YC_BASE_PATH}/secret.json`);
@@ -192,7 +192,7 @@ class YandexCloudInitializer {
     constructor(typeAuthorization, data) {
         const processorAuthorization = ALLOWED_TYPE_AUTHORIZATION.get(typeAuthorization);
         if (processorAuthorization === undefined) {
-            throw new Error("Unsupported type of authorization");
+            throw new Error('Unsupported type of authorization');
         }
         YandexCloudInitializer.initializeCli();
         processorAuthorization(data);
@@ -203,33 +203,33 @@ class YandexCloudInitializer {
      */
     static initializeCli() {
         if (fs.existsSync(`${YC_BASE_PATH}/bin/yc`)) {
-            core.debug("YandexCloud CLI is already initialized");
+            core.debug('YandexCloud CLI is already initialized');
             return;
         }
         core.debug((0, child_process_1.execSync)(YC_INSTALLER).toString());
         core.addPath(`${YC_BASE_PATH}/bin`);
-        core.debug("YandexCloud CLI initialized");
+        core.debug('YandexCloud CLI initialized');
     }
     /**
      * Create IAM token
      */
     createIamToken() {
-        core.debug("Start creating an iam token");
+        core.debug('Start creating an iam token');
         const iamToken = (0, child_process_1.execSync)(`yc iam create-token`).toString().trim();
         core.setSecret(iamToken);
-        core.setOutput("iam-token", iamToken);
+        core.setOutput('iam-token', iamToken);
     }
     createK8sToken(clusterId) {
         return __awaiter(this, void 0, void 0, function* () {
-            core.debug("Start creating a k8s token");
+            core.debug('Start creating a k8s token');
             yield exec.exec(`yc managed-kubernetes cluster get-credentials --id ${clusterId} --external`);
-            const output = yield exec.getExecOutput("yc k8s create-token");
+            const output = yield exec.getExecOutput('yc k8s create-token');
             core.setSecret(output.stdout);
-            const k8sManager = new k8s_manager_1.default(USER_HOME);
+            const k8sManager = new k8s_manager_1.default(`${USER_HOME}/.kube/`);
             k8sManager.setToken(output.stdout);
             const k8sConfig = k8sManager.getConfig();
             core.setSecret(k8sConfig);
-            core.setOutput("k8s-config", k8sConfig);
+            core.setOutput('k8s-config', k8sConfig);
         });
     }
 }
