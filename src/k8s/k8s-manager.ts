@@ -4,7 +4,7 @@ import YAML from 'yaml'
 //@typescript-eslint/no-extraneous-class
 export default function k8sManager(token: string): void {
   const kubeConfig = YAML.parse(
-    fs.readFileSync('/Users/bigtows/.kube/s', 'utf-8')
+    fs.readFileSync('/Users/bigtows/.kube/config', 'utf-8')
   )
 
   for (const user of kubeConfig.users) {
@@ -18,5 +18,5 @@ export default function k8sManager(token: string): void {
 
     execCredentials.args.push(token)
   }
-  fs.writeFileSync('/Users/bigtows/.kube/d', YAML.stringify(kubeConfig))
+  fs.writeFileSync('/Users/bigtows/.kube/config', YAML.stringify(kubeConfig))
 }
