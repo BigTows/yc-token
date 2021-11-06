@@ -8,6 +8,9 @@ inputs:
   type-token:
     required: false
     description: 'Value of type token for creation'
+  cluster-id:
+    required: false
+    description: 'Value of cluster ID'
 runs:
   using: 'node12'
   main: 'dist/index.js'
